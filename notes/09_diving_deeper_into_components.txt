@@ -1,0 +1,263 @@
+- Global vs Local Components
+
+Global:
+const app = createApp(App);
+
+app.component('the-header', TheHeader);
+app.component('base-badge', BaseBadge);
+app.component('badge-list', BadgeList);
+app.component('user-info', UserInfo);
+
+app.mount('#app');
+
+Local:
+<script>
+import TheHeader from "./components/TheHeader.vue";
+import BadgeList from "./components/BadgeList.vue";
+import UserInfo from "./components/UserInfo.vue";
+export default {
+  components: {
+    "the-header": TheHeader,
+    "badge-list": BadgeList,
+    "user-info": UserInfo,
+  },
+
+  data() {
+    return {
+      activeUser: {
+        name: "Maximilian Schwarzmüller",
+        description: "Site owner and admin",
+        role: "admin",
+      },
+    };
+  },
+};
+</script>
+
+
+-Scoped Styles
+
+<style scoped>
+header {
+  width: 100%;
+  height: 5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #14005e;
+}
+
+header h1 {
+  color: white;
+  margin: 0;
+}
+</style>
+
+-Introducing Slots
+
+slot: receiving html code from outside
+(children)
+<template>
+  <div>
+    <slot></slot>
+  </div>
+</template>
+
+<script>
+export default {};
+</script>
+
+<style scoped>
+div {
+  margin: 2rem auto;
+  max-width: 30rem;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
+  padding: 1rem;
+}
+</style>
+
+(parent)
+<template>
+  <section>
+    <base-card>
+      <header>
+        <h3>{{ fullName }}</h3>
+        <base-badge :type="role" :caption="role.toUpperCase()"></base-badge>
+      </header>
+      <p>{{ infoText }}</p>
+    </base-card>
+  </section>
+</template>
+
+
+- Named Slots
+
+(children)
+<template>
+  <div>
+    <header>
+      <slot name="header"></slot>
+    </header>
+    <slot></slot>
+  </div>
+</template>
+
+(parent)
+<template>
+  <section>
+    <base-card>
+      <template v-slot:header>
+        <h3>{{ fullName }}</h3>
+        <base-badge :type="role" :caption="role.toUpperCase()"></base-badge>
+      </template>
+
+      <template v-slot:default>
+        <p>{{ infoText }}</p>
+      </template>
+    </base-card>
+  </section>
+</template>
+
+-Slot Styles & Compilation
+Default value:
+
+<template>
+  <div>
+    <header>
+      <slot name="header">
+        <h2>The Default</h2>
+      </slot>
+    </header>
+    <slot></slot>
+  </div>
+</template>
+
+-More on Slots
+
+(v-if="$slots.header")
+
+(parent)
+<template v-slot:header>
+    <h3>{{ fullName }}</h3>
+    <base-badge :type="role" :caption="role.toUpperCase()"></base-badge>
+</template>
+
+(children)
+<template>
+  <div>
+    <header v-if="$slots.header">
+      <slot name="header">
+        <!-- <h2>The Default</h2> -->
+      </slot>
+    </header>
+    <slot></slot>
+  </div>
+</template>
+
+v-slot:header === #header
+
+-Scoped Slots
+
+when define props in slot it will transmit data to parent
+
+(parent)
+<course-goals>
+    <template #default="slotProps">
+        <h2>{{ slotProps.item }}</h2>
+        <p>{{ slotProps['another-prop'] }}</p>
+    </template>
+</course-goals>
+
+(children)
+
+<template>
+  <ul>
+    <li v-for="goal in goals" :key="goal">
+      <slot :item="goal" another-prop="..."></slot>
+    </li>
+  </ul>
+</template>
+
+
+- Dynamic components and Keeping alive 
+
+input data wont be deleted (Keeping alive)
+
+<active-goals v-if="selectedComponent === 'active-goals'"></active-goals>
+<manage-goals v-if="selectedComponent === 'manage-goals'"></manage-goals>
+
+to
+
+<!-- <keep-alive>
+    <component :is="selectedComponent"></component>
+</keep-alive> -->
+
+<template>,<component> does not have meaning
+
+
+Teleporting Elements
+if will teleport somewhere else in the html structure
+
+(parent)
+<template>
+  <h2>Manage Goals</h2>
+  <input type="text" ref="goal" />
+  <button @click="setGoal">Set Goal</button>
+  <teleport to="body">
+    <error-alert v-if="inputIsInvalid">
+      <h2>Input is invalid!</h2>
+      <p>Please enter at least a few characters...</p>
+      <button @click="confirmError">Okay</button>
+    </error-alert>
+  </teleport>
+</template>
+
+<script>
+import ErrorAlert from './ErrorAlert.vue';
+
+export default {
+  components: {
+    ErrorAlert,
+  },
+  data() {
+    return {
+      inputIsInvalid: false,
+    };
+  },
+  methods: {
+    setGoal() {
+      const enteredValue = this.$refs.goal.value;
+      if (enteredValue === '') {
+        this.inputIsInvalid = true;
+      }
+    },
+    confirmError() {
+      this.inputIsInvalid = false;
+    },
+  },
+};
+</script>
+
+(children)
+<template>
+  <dialog open>
+    <slot></slot>
+  </dialog>
+</template>
+
+<style scoped>
+dialog {
+  margin: 0;
+  position: fixed;
+  top: 20vh;
+  left: 30%;
+  width: 40%;
+  background-color: white;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
+  padding: 1rem;
+}
+</style>
+
+- Working with Fragments
+vue3 can work with fragment (do not need to contain root element after template)

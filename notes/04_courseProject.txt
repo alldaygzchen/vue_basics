@@ -1,0 +1,23 @@
+function without this can be defined outside
+this.attackPlayer();
+Prevent repeated code(kind of like state in react)
+  watch: {
+    playerHealth(value) {
+      if (value <= 0 && this.monsterHealth <= 0) {
+        // A draw
+        this.winner = "draw";
+      } else if (value <= 0) {
+        // Player lost
+        this.winner = "monster";
+      }
+    },
+    monsterHealth(value) {
+      if (value <= 0 && this.playerHealth <= 0) {
+        // A draw
+        this.winner = "draw";
+      } else if (value <= 0) {
+        // Monster lost
+        this.winner = "player";
+      }
+    },
+  },

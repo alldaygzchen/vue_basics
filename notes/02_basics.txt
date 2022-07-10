@@ -1,0 +1,194 @@
+<li v-for="goal in goals">{{ goal }}</li>
+<p>{{ outputGoal() }}</p>
+<button v-on:click="addGoal">Add Goal</button>
+<input type="text" id="goal" v-model="enteredValue" />
+<a v-bind:href="vueLink">
+<p v-html="outputGoal()"></p>
+<button v-on:click="addGoal">Add Goal</button>
+<input type="text" v-on:input="setName($event,'HI')" />
+<form v-on:submit.prevent="submitForm">
+<p v-once>Start: {{ counter }}</p>
+
+
+
+//////////////////////////////////////////////////////////////////////////////
+1. Vue template
+2. const app, app.mount
+3. data interpolation {{}} e.g. any kind of data
+4. v-bind:href since not between opening and closing tags (attribute)
+5. {{}} cannnot put if statement, but js expression will be fine
+6. this keyword
+7. if html are in data=> {{html}} still text (prevent xss attacks)
+8. Declarative: Do not define all features(declare our goal by doing it)
+9,10
+11.Declarative: 
+1.declare where you have event listener
+2. declare where you want to output value
+3. declare which values you want to aware of
+12.
+#both will be ok
+<button v-on:click="add()">Add</button>
+<button v-on:click="add">Add</button>
+13.
+<button v-on:click="add(5)">Add</button>
+14.
+<input type="text" v-on:input="setName" />//don't overwrite event default
+<p>Your Name: {{ name }}</p>
+
+setName(event) {
+    this.name = event.target.value;
+},
+
+<input type="text" v-on:input="setName($event,'HI')" />
+setName(event, sth) {
+    this.name = event.target.value + sth;
+},
+15.
+//////////////////////////
+<form v-on:submit="submitForm">
+    <input type="text" />
+    <button>Sign up</button>
+</form>
+submitForm(event) {
+    event.preventDefault();
+    alert("submitted");
+},
+
+//////////////////////////
+<form v-on:submit.prevent="submitForm">
+    <input type="text" />
+    <button>Sign up</button>
+</form>
+submitForm() {
+    alert("submitted");
+},
+
+//////////////////////////
+<button v-on:click.right="reduce(5)">Subtract 5</button>
+
+//////////////////////////
+<input
+type="text"
+v-on:input="setName($event,'HI')"
+v-on:keyup.enter="confirmInput"
+/>
+
+confirmInput() {
+    this.confirmedName = this.name;
+},
+//////////////////////////
+<p v-once>Start: {{ counter }}</p>
+
+16,17
+18.
+<input
+type="text"
+v-on:input="setName($event,'HI')"
+v-bind:value="name"
+/> equals (two way binding)
+<input
+type="text"
+v-model="name"
+/>
+19.How It Works
+<p>{{ outputGoal() }}</p> bad performance(updates every time)
+20. 
+Computed Properties: vue is aware of dependencies (most for outputing something not for events)
+<p>Your Name: {{ fullname }}</p>
+
+ computed: {
+    fullname() {
+      console.log("Running again...");
+      if (this.name === "") {
+        return "";
+      }
+      return this.name + " " + "hi";
+    },
+  },
+21.Working with Watchers
+
+<p>Your Name: {{ fullname }}</p>
+
+name(value) { //value
+if (value === '') {
+    this.fullname = '';
+} else {
+    this.fullname = value + ' ' + this.lastName;
+}
+},
+lastName(value) {
+if (value === '') {
+    this.fullname = '';
+} else {
+    this.fullname = this.name + ' ' + value;
+}
+},
+
+Watchers vs Computed Properties
+watchers can only have value parameter and do not need to return
+Computed Properties do not have to define data and need to return
+
+computed: {
+fullname() {
+    console.log("Running again...");
+    if (this.name === "" || this.lastName === "") {
+    return "";
+    }
+    return this.name + " " + this.lastName;
+},
+},
+
+22.Methods vs Computed Properties vs Watchers
+Methods: **event binding** or data binding{{}} (everytime render not suggested)
+Computed Properties: data binding including css
+Watchers: Not used directly in template (behind scene)
+23.v-bind and v-on Shorthands
+v-on: === @
+v-bind===:value='...' === :value='...'
+24,25
+watch can also executed in Computed Properties
+
+26.Adding CSS Classes Dynamically
+<!-- <div
+class="demo"
+:style="{borderColor:boxASelected?'red':'yellow'}"
+@click="boxSelected('A')"
+></div> -->
+
+<!-- <div
+:class="boxASelected?'demo active':'demo'"
+@click="boxSelected('A')"
+></div> -->
+<!-- <div
+:class="{demo:true,active:boxASelected}"
+@click="boxSelected('A')"
+></div> -->
+<div
+class="demo"
+:class="{active:boxASelected}"
+@click="boxSelected('A')"
+></div>
+
+27.Classes & Computed Properties
+<div class="demo" :class="boxAClasses" @click="boxSelected('A')"></div>
+computed: {
+boxAClasses() {
+    return { active: this.boxASelected };
+},
+},
+28. Dynamic Classes: Array Syntax
+<div
+:class="['demo', {active: boxBSelected}]"
+@click="boxSelected('B')"
+></div>
+
+28,29.Time to Practice: Dynamic Styling - Problem
+Computed Properties: data binding also in css
+<p :class="paraClasses">Style me!</p>
+
+p :style="{'background-color': inputBackgroundColor}">
+30.
+bind: {{}} for content, v-bind for attribute
+event: @
+[data,computed properties ](output data),[methods](event listner),watch(trigger when data changes)
+styling: [],{},computed properties

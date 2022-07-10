@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vue Basics</title>
+    <script src="https://unpkg.com/vue@next" defer></script>
+    <script src="ratingCounter.js" defer></script>
+    <script src="ratingTitle.js" defer></script>
+    <script src="app.js" defer></script>
+  </head>
+  <body>
+    <div id="app">
+      {{ parentHeader.label+" "+parentHeader.globalCount }}
+      <hr />
+      <rating-counter
+        :parent="parentHeader"
+        @change="changeValue"
+      ></rating-counter>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,61 @@
+-Working with v-model Modifiers and Numbers
+  
+  data() {
+    return {
+      userName: '',
+      userAge: null,
+      referrer: 'wom', (default)
+      interest: [],
+      how: null,
+      confirm: false,
+      rating: null,
+      userNameValidity: 'pending'
+    };
+  },
+
+- v model: number(blue) ref=string(black) [js store string]
+- Using v-model with Checkboxes & Radiobuttons
+checkbox with single value: true or false
+checkbox with multiple value: array
+
+
+- Adding Basic Form Validation
+<input id="user-name" name="user-name" type="text" v-model.trim="userName" @blur="validateInput" /> validate when input loses focus
+<p v-if="userNameValidity === 'invalid'">Please enter a valid name!</p>
+
+validateInput() {
+    if (this.userName === '') {
+    this.userNameValidity = 'invalid';
+    } else {
+    this.userNameValidity = 'valid';
+    }
+}
+
+-Building a Custom Control Component
+
+Define to type=button to prevent submit from a Form
+
+<button type="button" @click="activate('poor')">Poor</button>
+
+
+- Using v-model on Custom Components
+<rating-control v-model="rating"></rating-control>  === :modelValue='something'  update:modelValue
+
+  // data() {
+  //   return {
+  //     activeOption: this.modelValue,
+  //   };
+  // }, doesnt work (activeOption have no relation with parent)
+
+  // computed: {
+  //   activeOption() {
+  //     return this.modelValue;
+  //   }
+  // },
+
+    methods: {
+    activate(option) {
+      this.$emit('update:modelValue', option);
+    },
+  },
+  <li :class="{active: modelValue === 'poor'}">

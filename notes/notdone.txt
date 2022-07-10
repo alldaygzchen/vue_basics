@@ -1,0 +1,8 @@
+transform vue to js
+///////////////
+id drawback
+///////////////
+vue to app
+///////////////
+components for loop
+https://stackoverflow.com/questions/60058705/vuejs-components-inside-a-loop-act-as-one

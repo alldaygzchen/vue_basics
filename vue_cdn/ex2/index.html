@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vue Basics</title>
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+    />
+    <style>
+      .section {
+        margin-top: 2em;
+      }
+    </style>
+    <!-- <link rel="stylesheet" href="app.css" /> -->
+    <script src="https://unpkg.com/axios/dist/axios.min.js" defer></script>
+    <script src="https://unpkg.com/vue@next" defer></script>
+    <script
+      src="https://unpkg.com/vue-router@4.0.15/dist/vue-router.global.js"
+      defer
+    ></script>
+    <script src="./components/navigation.js" defer></script>
+    <script src="./components/access.js" defer></script>
+    <script src="./components/content.js" defer></script>
+    <script src="./router.js" defer></script>
+    <script src="./app.js" defer></script>
+  </head>
+  <body>
+    <div class="wrapper">
+      <div id="app" class="container" style="padding-top: 2em">
+        <div class="text-center">
+          <router-view @auth-verified="setAuthStatus"></router-view>
+        </div>
+      </div>
+      <footer
+        style="
+          background-color: rgb(236, 236, 236);
+          position: fixed;
+          width: 100%;
+          font-size: 80%;
+          margin-top: 5em;
+          padding-top: 5px;
+          padding-bottom: 5px;
+          bottom: 0;
+        "
+      >
+        <div class="container">
+          <i>© 2020.</i>
+        </div>
+      </footer>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,4 @@
+props can also be css transmit variable
+<component :is="selectedTab"></component> provide inject
+Array.prototype.filter() create new array
+https://medium.com/geekculture/dynamic-components-in-vue-3-7504d5ffcb6c

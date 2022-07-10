@@ -1,0 +1,59 @@
+<li v-for="goal in goals">{{ goal }}</li>
+<p>{{ outputGoal() }}</p> (not suggested since it will be evaluate in every render)
+<button v-on:click="addGoal">Add Goal</button>
+<input type="text" id="goal" v-model="enteredValue" />
+<a v-bind:href="vueLink">
+<p v-html="outputGoal()"></p>
+<button v-on:click="addGoal">Add Goal</button>
+<input type="text" v-on:input="setName($event,'HI')" />
+<form v-on:submit.prevent="submitForm">
+<p v-once>Start: {{ counter }}</p>
+<p v-if="goals.length === 0">
+<ul v-else>
+<li
+    v-for="(goal, index) in goals"
+    :key="goal"
+    @click="removeGoal(index)"
+>
+<li v-for="num in 10">{{ num }}</li>
+<li v-for="(value, key, index) in {name: 'Max', age: 31}">{{ key }}: {{ value }} - {{ index }}</li>
+
+
+1.Module Introduction
+2,3
+<p v-if="goals.length === 0">
+4.
+<p v-if="goals.length === 0">
+<ul v-else> (if else should use it directly)
+<ul v-else-if="goals.length > 0">
+5.
+v-show: standalone (display:none)
+<p v-show="goals.length > 0">
+6. for in not for of
+<li
+    v-for="(goal, index) in goals"
+    :key="goal"
+    @click="removeGoal(index)"
+>
+<li v-for="num in 10">{{ num }}</li>
+<li v-for="(value, key, index) in {name: 'Max', age: 31}">{{ key }}: {{ value }} - {{ index }}</li>
+7.Removing list Items
+<li
+v-for="(goal, index) in goals"
+@click="removeGoal(index)"
+>
+8.Lists & Keys
+vue will resue component using dynamic values, we need a identifer for each li
+<li
+    v-for="(goal, index) in goals"
+    :key="index"
+    @click="removeGoal(index)"
+>
+9.Module Summary: 
+v-show without css display:none
+key helps identify every list
+v-if and v-for seperate
+<ul v-if="taskListIsVisible">
+<!-- 2) Output the list of tasks here -->
+<li v-for="task in tasks" :key="task">{{ task }}</li>
+</ul>

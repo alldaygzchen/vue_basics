@@ -1,0 +1,150 @@
+- conditions
+
+<p v-if="isLoading">Loading...</p>
+<p v-else-if="!isLoading && error">{{ error }}</p>
+<p v-else-if="!isLoading && (!results || results.length === 0)">
+
+
+-  results: [],isLoading: false,error: null,
+
+
+data() {
+return {
+    results: [],
+    isLoading: false,
+    error: null,
+};
+},
+
+
+  methods: {
+    loadExperiences() {
+      this.isLoading = true;
+      this.error = null;
+      fetch(
+        "https://vue-http-demo-b00af-default-rtdb.firebaseio.com/surveys.json"
+      )
+        .then((response) => {
+          if (response.ok) {
+            return response.json();
+          }
+        })
+        .then((data) => {
+          this.isLoading = false;
+          const results = [];
+          for (const id in data) {
+            results.push({
+              id: id,
+              name: data[id].name,
+              rating: data[id].rating,
+            });
+          }
+          this.results = results;
+        })
+        .catch((error) => {
+          console.log(error);
+          this.isLoading = false;
+          this.error = "Failed to fetch data - please try again later.";
+        });
+    },
+  },
+  mounted() {
+    this.loadExperiences();
+  },
+};
+
+- App.vue does not have to be the data center
+
+<template>
+  <learning-survey></learning-survey>
+  <user-experiences></user-experiences>
+</template>
+
+<script>
+import LearningSurvey from './components/survey/LearningSurvey.vue';
+import UserExperiences from './components/survey/UserExperiences.vue';
+
+export default {
+  components: {
+    LearningSurvey,
+    UserExperiences,
+  },
+  // data() {
+  //   return {
+  //     savedSurveyResults: [],
+  //   };
+  // },
+  // methods: {
+  //   storeSurvey(surveyData) {
+  //     const surveyResult = {
+  //       name: surveyData.userName,
+  //       rating: surveyData.rating,
+  //       id: new Date().toISOString(),
+  //     };
+  //     this.savedSurveyResults.push(surveyResult);
+  //     console.log(surveyResult);
+  //   },
+  // },
+};
+</script>
+
+<style>
+* {
+  box-sizing: border-box;
+}
+
+html {
+  font-family: sans-serif;
+}
+
+body {
+  margin: 0;
+}
+</style>
+
+-  server and technical error
+
+methods: {
+    submitSurvey() {
+      if (this.enteredName === "" || !this.chosenRating) {
+        this.invalidInput = true;
+        return;
+      }
+      this.invalidInput = false;
+
+      // this.$emit('survey-submit', {
+      //   userName: this.enteredName,
+      //   rating: this.chosenRating,
+      // });
+
+      this.error = null;
+      fetch(
+        "https://vue-http-demo-b00af-default-rtdb.firebaseio.com/surveys.json",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            name: this.enteredName,
+            rating: this.chosenRating,
+          }),
+        }
+      )
+        .then((response) => {
+          if (response.ok) {
+            // ...
+          } else {//server error
+            throw new Error("Could not save data!");
+          }
+        })
+        .catch((error) => {//technical  error
+          console.log(error);
+          this.error = error.message;
+        });
+
+      this.enteredName = "";
+      this.chosenRating = null;
+    },
+  },
+};

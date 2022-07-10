@@ -1,0 +1,41 @@
+2. An Introduction to Vue's Reactivity
+wrap all your data to be reactive
+use proxy to nofity
+3.Vue Reactivity: A Deep Dive
+4. One App vs Multiple Apps
+Multiple Apps are allowed(each apps are standalone)
+5.
+extract every time when we needed
+<input type="text" ref="userText" />
+this.message = this.$refs.userText.value;
+6.
+How Vue Updates the DOM?
+Virtual DOM
+7.
+Vue App Lifecycle - Theory
+  // beforeCreate() {
+  //   console.log("beforeCreate()");
+  // },
+  // created() {
+  //   console.log("created()");
+  // },
+  // beforeMount() {
+  //   console.log("beforeMount()");
+  // },
+  // mounted() {
+  //   console.log("mounted()");
+  // },
+  ////////////////////////
+  // beforeUpdate() {
+  //   console.log("beforeUpdate()");
+  // },
+  // updated() {
+  //   console.log("updated()");
+  // },
+////////////////////////
+  // beforeUnmount() {
+  //   console.log("beforeUnmount()");
+  // },
+  // unmounted() {
+  //   console.log("unmounted()");
+  // },

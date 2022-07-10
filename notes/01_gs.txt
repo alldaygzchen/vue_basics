@@ -1,0 +1,24 @@
+1.
+2.vue definition
+3.widget and whole webpage
+4.react angular
+5.input form
+6.
+(html)
+<script src="https://unpkg.com/vue@next"></script>
+v-for="goal in goals"{{ goal }}
+v-on:click="addGoal"
+v-model="enteredValue"
+(js)
+Vue.createApp
+data()
+methods:
+.mount("#app");
+7.
+(Declarative) 
+1.Do not need to find DOM
+2.Create Dom using JS not declarative
+3.readable
+8. prettier
+9. Course level
+10. Get the most out of this course

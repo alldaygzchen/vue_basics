@@ -1,0 +1,44 @@
+1.Module Introduction
+2.Understanding the problem
+below the this.detailsAreVisible are shared for all <li></li>
+  methods: {
+    toggleDetails() {
+      this.detailsAreVisible = !this.detailsAreVisible;
+    },
+  },
+3. Introduction components
+**componets can solve the problem above**
+component is a mini app of main app, inside can be written template, data, method ...
+app.component("friend-contact", {
+  template: `
+  <li>
+    <h2>{{ friend.name }}</h2>
+    <h2>{{ friend.name }}</h2>
+    <button @click="toggleDetails()">
+      {{ detailsAreVisible ? 'Hide' : 'Show' }} Details
+    </button>
+    <ul v-if="detailsAreVisible">
+      <li><strong>Phone:</strong> {{ friend.phone }}</li>
+      <li><strong>Email:</strong> {{ friend.email }}</li>
+    </ul>
+  </li>
+  `,
+  data() {
+    return {
+      detailsAreVisible: false,
+      friend: {
+        id: "manuel",
+        name: "Manuel Lorenzo",
+        phone: "01234 5678 991",
+        email: "manuel@localhost.com",
+      },
+    };
+  },
+  methods: {
+    toggleDetails() {
+      this.detailsAreVisible = !this.detailsAreVisible;
+    },
+  },
+});
+4.Multiple Vue Apps vs Multiple Components
+components can communicate with each other while apps can not

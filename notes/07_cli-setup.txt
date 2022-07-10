@@ -1,0 +1,15 @@
+- Model Introduction
+- why need development server?
+beacuse not in protocol, protocal does not have all js feature
+- Why We Want A Better Developer Experience
+it will lost all your state when testing 
+- Installing & Using the Vue CLI
+npm install -g @vue/cli
+vue create 07_cli_setup
+cd 07_cli_setup
+npm run serve
+-Inspecting the Created Project
+- A new Project
+npm install
+- else
+07-01_vue_project_start

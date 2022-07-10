@@ -1,0 +1,425 @@
+single page app will be hard when transmmiting data
+
+- Routing Setup
+npm install --save vue-router
+
+- Registering & Rendering Routes
+
+[App.vue]
+<main>
+    <router-view></router-view>
+</main>
+
+[main.js]
+app.use(router);
+
+[router.js]
+import { createRouter, createWebHistory } from 'vue-router';
+const router = createRouter({
+  history: createWebHistory(),
+  routes: [
+    { path: '/', redirect: '/teams' },
+    {
+      name: 'teams',
+      path: '/teams',
+      meta: { needsAuth: true },
+      components: { default: TeamsList, footer: TeamsFooter },
+      children: [
+        {
+          name: 'team-members',
+          path: ':teamId',
+          component: TeamMembers,
+          props: true
+        } // /teams/t1
+      ]
+    }, // our-domain.com/teams => TeamsList
+    {
+      path: '/users',
+      components: {
+        default: UsersList,
+        footer: UsersFooter
+      },
+      beforeEnter(to, from, next) {
+        console.log('users beforeEnter');
+        console.log(to, from);
+        next();
+      }
+    },
+    { path: '/:notFound(.*)', component: NotFound }
+  ],
+  linkActiveClass: 'active',
+  scrollBehavior(_, _2, savedPosition) {
+    // console.log(to, from, savedPosition);
+    if (savedPosition) {
+      return savedPosition;
+    }
+    return { left: 0, top: 0 };
+  }
+});
+
+- Navigating with router-link
+<router-link to="/teams">Teams</router-link> [special anchor tag but still on the same page]
+css still use a tag
+a {
+  text-decoration: none;
+  background: transparent;
+  border: 1px solid transparent;
+  cursor: pointer;
+  color: white;
+  padding: 0.5rem 1.5rem;
+  display: inline-block;
+}
+
+- Styling Active Links
+using router-link there will be some classes denote it existing in current active link
+linkActiveClass: 'active',
+a:hover,
+a:active,
+a.active {
+  color: #f1a80a;
+  border-color: #f1a80a;
+  background-color: #1a037e;
+}
+
+- Programmatic Navigation
+  methods: {
+    confirmInput() {
+      // do something
+      this.$router.push('/teams');
+    },
+    saveChanges() {
+      this.changesSaved = true;
+    }
+  },
+
+- Passing Data with Route Params (Dynamic Segments)
+this.$route.path // /teams/t1
+this.$route.query
+this.$route.params.teamId
+
+created() {
+// this.$route.path // /teams/t1
+this.loadTeamMembers(this.teamId);
+console.log(this.$route.query);
+},
+
+
+[:to === v-bind]
+<router-link :to="teamMembersLink">View Members</router-link>
+<script>
+export default {
+  props: ['id', 'name', 'memberCount'],
+  computed: {
+    teamMembersLink() {
+      // return '/teams/' + this.id + '?sort=asc';
+      return {
+        name: 'team-members',
+        params: { teamId: this.id },
+        query: { sort: 'asc' },
+      };
+      // this.$router.push({ name: 'team-members', params: { teamId: this.id } });
+    },
+  },
+};
+</script>
+
+
+Updating Params Data with Watchers
+
+created(){
+    this.loadTeamMembers(this.$route)
+}
+
+watch(){
+    $route(newRoute){
+        this.loadTeamMembers(newRoute)
+    }
+}
+
+Passing Params as Props
+consider loading not through routing
+[props:true] url parameter can be passed to component
+    {
+    name: 'teams',
+    path: '/teams',
+    meta: { needsAuth: true },
+    components: { default: TeamsList, footer: TeamsFooter },
+    children: [
+    {
+    name: 'team-members',
+    path: ':teamId',
+    component: TeamMembers,
+    props: true
+    } // /teams/t1
+    ]
+    },
+
+
+Redirecting & "Catch All" Routes
+redirect: url change
+alias: url do not change
+ { path: '/', redirect: '/teams' }
+
+ Not found
+{ path: '/:notFound(.*)', component: NotFound }
+
+Using Nested Routes
+add content in same page according parameter
+
+
+<router-view></router-view>[root url]
+
+For Nested
+<template>
+  <router-view></router-view>
+  <ul>
+    <teams-item
+      v-for="team in teams"
+      :key="team.id"
+      :id="team.id"
+      :name="team.name"
+      :member-count="team.members.length"
+    ></teams-item>
+  </ul>
+</template>
+
+{
+    name: 'teams',
+    path: '/teams',
+    meta: { needsAuth: true },
+    components: { default: TeamsList, footer: TeamsFooter },
+    children: [
+    {
+        name: 'team-members',
+        path: ':teamId',
+        component: TeamMembers,
+        props: true
+    } // /teams/t1
+    ]
+}, 
+
+
+More Fun with Named Routes & Location Objects
+[adding name in each router: if path changes only need to change path]
+
+    {
+      name: 'teams',
+      path: '/teams',
+      meta: { needsAuth: true },
+      components: { default: TeamsList, footer: TeamsFooter },
+      children: [
+        {
+          name: 'team-members',
+          path: ':teamId',
+          component: TeamMembers,
+          props: true
+        } // /teams/t1
+      ]
+    }
+
+export default {
+  props: ['id', 'name', 'memberCount'],
+  computed: {
+    teamMembersLink() {
+      // return '/teams/' + this.id + '?sort=asc';
+      return {
+        name: 'team-members',
+        params: { teamId: this.id },
+        query: { sort: 'asc' },
+      };
+      // this.$router.push({ name: 'team-members', params: { teamId: this.id } });
+    },
+  },
+};
+
+Using Query Params
+
+export default {
+  props: ['id', 'name', 'memberCount'],
+  computed: {
+    teamMembersLink() {
+      // return '/teams/' + this.id + '?sort=asc';
+      return {
+        name: 'team-members',
+        params: { teamId: this.id },
+        query: { sort: 'asc' },
+      };
+      // this.$router.push({ name: 'team-members', params: { teamId: this.id } });
+    },
+  },
+};
+
+console.log(this.$route.query);
+
+
+- Rendering Multiple Routes with Named Router Views
+
+<template>
+  <the-navigation></the-navigation>
+  <main>
+    <router-view></router-view>
+  </main>
+  <footer>
+    <router-view name="footer"></router-view>
+  </footer>
+</template>
+
+
+{
+name: 'teams',
+path: '/teams',
+meta: { needsAuth: true },
+components: { default: TeamsList, footer: TeamsFooter },
+children: [
+    {
+    name: 'team-members',
+    path: ':teamId',
+    component: TeamMembers,
+    props: true
+    } // /teams/t1
+]
+}, // our-domain.com/teams => TeamsList
+
+
+- Controlling Scroll Behavior
+  scrollBehavior(_, _2, savedPosition) {
+    // console.log(to, from, savedPosition);
+    if (savedPosition) {
+      return savedPosition;
+    }
+    return { left: 0, top: 0 };
+  }
+});
+
+- Introducing Navigation Guards
+ when navigate one page to another, this function will be called first
+
+router.beforeEach(function(to, from, next) {
+  console.log('Global beforeEach');
+  console.log(to, from);
+  if (to.meta.needsAuth) {
+    console.log('Needs auth!');
+    next();
+  } else {
+    next();
+  }
+  // if (to.name === 'team-members') {
+  //   next();
+  // } else {
+  //   next({ name: 'team-members', params: { teamId: 't2' } });
+  // }
+  // next();
+});
+
+Diving Deeper Into Navigation Guards
+[single route]
+
+    {
+      path: '/users',
+      components: {
+        default: UsersList,
+        footer: UsersFooter
+      },
+      beforeEnter(to, from, next) {
+        console.log('users beforeEnter');
+        console.log(to, from);
+        next();
+      }
+    },
+
+[written in component]
+  beforeRouteEnter(to, from, next) {
+    console.log('UsersList Cmp beforeRouteEnter');
+    console.log(to, from);
+    next();
+  },
+
+(Global) beforeEach => (single route) beforeEnter => (component) beforeRouteEnter
+
+loading component guard
+  beforeRouteUpdate(to, from, next) {
+    console.log('TeamMembers Cmp beforeRouteUpdate');
+    console.log(to, from);
+    // this.loadTeamMembers(to.params.teamId);
+    next();
+  },
+
+
+- The Global "afterEach" Guard [sending analytics data]
+
+router.afterEach(function(to, from) {
+  // sending analytics data
+  console.log('Global afterEach');
+  console.log(to, from);
+});
+
+Beyond Entering: Route Leave Guards
+
+<button @click="saveChanges">Save Changes</button>
+
+
+  data() {
+    return { changesSaved: false };
+  },
+
+  beforeRouteLeave(to, from, next) {
+    console.log('UsersList Cmp beforeRouteLeave');
+    console.log(to, from);
+    
+    if (this.changesSaved) {
+      next();
+    } else {
+      const userWantsToLeave = confirm('Are you sure? You got unsaved changes!');
+      next(userWantsToLeave); [next(userWantsToLeave)=next()]
+    }
+  },
+  unmounted() {
+    console.log('unmounted');
+  }
+
+  [changing route will automatically unmount]
+
+
+Utilizing Route Metadata
+apply in navigation guard or access everywhere
+
+const router = createRouter({
+  history: createWebHistory(),
+  routes: [
+    { path: '/', redirect: '/teams' },
+    {
+      name: 'teams',
+      path: '/teams',
+      meta: { needsAuth: true },
+      components: { default: TeamsList, footer: TeamsFooter },
+      children: [
+        {
+          name: 'team-members',
+          path: ':teamId',
+          component: TeamMembers,
+          props: true
+        } // /teams/t1
+      ]
+    }, //
+
+
+  router.beforeEach(function(to, from, next) {
+  console.log('Global beforeEach');
+  console.log(to, from);
+  if (to.meta.needsAuth) {
+    console.log('Needs auth!');
+    next();
+  } else {
+    next();
+  }
+  // if (to.name === 'team-members') {
+  //   next();
+  // } else {
+  //   next({ name: 'team-members', params: { teamId: 't2' } });
+  // }
+  // next();
+});
+
+
+Organizing Route Files
+Distiction between components loaded from router (pages) and props component

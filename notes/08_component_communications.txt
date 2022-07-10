@@ -1,0 +1,188 @@
+2.Introducing "Props" (Parent => Child Communication)
+- camel in script(otherwise invalid js name), - in html (variable with tags are not defined)
+
+<template>
+  <section>
+    <h2>{{ topicTitle }}</h2>
+    <p>{{ text }}</p>
+  </section>
+</template>
+
+<script>
+export default {
+  props: ['topicTitle', 'text'],
+};
+</script>
+
+<template>
+  <div>
+    <active-element
+      :topic-title="activeTopic && activeTopic.title"
+      :text="activeTopic && activeTopic.fullText"
+    ></active-element>
+    <knowledge-base></knowledge-base>
+  </div>
+</template>
+
+
+
+
+
+- define our props in component, transmit data outside the component
+- unidirectional dataflow in vue ( cannot change value from Parent)(Do no mutate props )
+- define for more readable  (makes your life more easier)
+prop validation
+props: {
+    id: {
+      type: String,
+      required: true,
+    },
+    name: {
+      type: String,
+      required: true,
+    },
+    phoneNumber: {
+      type: String,
+      required: true,
+    },
+    emailAddress: {
+      type: String,
+      required: true,
+    },
+    isFavorite: {
+      type: Boolean,
+      required: false,
+      default: false,
+      // validator: function(value) {
+      //   return value === '1' || value === '0';
+      // }
+    },
+  },
+
+3. Working with dynamic prop values
+In order to receive text variable we use v-bind
+
+<friend-contact
+v-for="friend in friends"
+:key="friend.id"
+:id="friend.id"
+:name="friend.name"
+:phone-number="friend.phone"
+:email-address="friend.email"
+:is-favorite="friend.isFavorite"
+></friend-contact>
+
+4.Emitting Custom Events (Child => Parent Communication)
+props is communication from parent to child
+if component wants to tell parent something change
+(children)
+<button @click="toggleFavorite">Toggle Favorite</button>
+toggleFavorite() {
+    this.$emit("toggle-favorite", this.id);
+},
+
+(parent)
+@toggle-favorite="toggleFavoriteStatus"
+toggleFavoriteStatus(friendId) {
+    const identifiedFriend = this.friends.find(
+    (friend) => friend.id === friendId
+    );
+    identifiedFriend.isFavorite = !identifiedFriend.isFavorite;
+},
+
+-Prop / Event Fallthrough & Binding All Props
+- Props and events added on a custom component tag automatically fall through to the root component in the template of that component.
+
+(parent)
+<base-button type="submit" @click="doSomething">Click me</base-button>
+
+(children)
+<template>  
+  <button>
+    <slot></slot>
+  </button>
+</template>
+ 
+<script>export default {}</script>
+
+- v-bind="person" you pass all key-value pairs inside of person as props to the component.
+
+<template>
+  <user-data v-bind="person"></user-data>
+</template>
+ 
+<script>
+  export default {
+    data() {
+      return {
+        person: { firstname: 'Max', lastname: 'Schwarz' }
+      };
+    }
+  }
+</script>
+
+- props can also {{}}
+
+<template>
+  <li>
+    <h3>{{ topicName }}</h3>
+    <p>{{ description }}</p>
+    <button @click="selectTopic(id)">Learn More</button>
+  </li>
+</template>
+
+<script>
+export default {
+  inject: ["selectTopic"],
+  props: ["id", "topicName", "description"],
+  // emits: ['select-topic'],
+};
+</script>
+
+
+-A Potential Problem
+props are transmit step by step(there should be better solution)
+
+- Provide + Inject To The Rescue
+props:if you want to pass through elements use provide and inject
+
+- Provide + Inject for Functions / Methods
+
+before
+(children)
+<button @click="toggleFavorite">Toggle Favorite</button>
+toggleFavorite() {
+  this.$emit("toggle-favorite", this.id);
+},
+(parent)
+@toggle-favorite="toggleFavoriteStatus"
+
+toggleFavoriteStatus(friendId) {
+  const identifiedFriend = this.friends.find(
+    (friend) => friend.id === friendId
+  );
+  identifiedFriend.isFavorite = !identifiedFriend.isFavorite;
+},
+
+after
+(parent)
+provide() {
+  return { 
+    topics: this.topics,
+    selectTopic: this.activateTopic
+  };
+},
+methods: {
+  activateTopic(topicId) {
+    this.activeTopic = this.topics.find((topic) => topic.id === topicId);
+  },
+},
+
+(children)
+inject: ['selectTopic'],
+<button @click="selectTopic(id)">Learn More</button>
+
+- Provide + Inject for Functions / Methods
+props and emit are replace  by provide and inject
+use props and emit when passing multiple value since it is not default
+

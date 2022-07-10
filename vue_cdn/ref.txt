@@ -1,0 +1,4 @@
+https://www.linode.com/docs/guides/how-to-build-and-use-vuejs-components/
+https://techformist.com/use-vue-from-url-simple-app/
+https://javascript.plainenglish.io/list-rendering-with-vue-js-numbers-components-and-templates-aa856f8ca95f
+http://jsnwork.kiiuo.com/archives/2611/vue-vue-component-%E7%B5%84%E4%BB%B6%E6%95%99%E5%AD%B8-%E4%BD%BF%E7%94%A8-v-bind%E3%80%81v-for%E3%80%81x-template/
