@@ -1,0 +1,6 @@
+compare1: js cleaner
+compare2: state
+compare3: component vue2
+compare4: proxy
+compare5: rememberme
+compare6: sum addtion

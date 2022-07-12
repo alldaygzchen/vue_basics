@@ -1,0 +1,16 @@
+{
+  "labels": [
+    "Mercury",
+    "Venus",
+    "Earth",
+    "Mars",
+    "Jupiter",
+    "Saturn",
+    "Uranus",
+    "Neptune"
+  ],
+  "numberOfMoons": [0, 0, 1, 2, 79, 82, 27, 14],
+  "planetaryMass": [
+    0.166, 2.081, 3.003, 0.323, 954.792, 285.886, 43.662, 51.514
+  ]
+}

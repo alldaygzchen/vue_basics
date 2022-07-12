@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Planet 10</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0" defer></script>
+    <script src="app.js" defer></script>
+  </head>
+  <body>
+    <h1>Each planet's mass and number of moons</h1>
+    <div class="form-control">
+      <label for="select">Filter Option</label>
+      <br />
+      <br />
+      <select id="select" name="select">
+        <option value="moons">Moons</option>
+        <option value="mass">Mass</option>
+        <option value="all" selected>All</option>
+      </select>
+    </div>
+    <canvas id="planet-chart-line" width="400" height="50"></canvas>
+    <canvas id="planet-chart-bar" width="400" height="50"></canvas>
+  </body>
+</html>
